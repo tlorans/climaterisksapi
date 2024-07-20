@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
-from ..db.base import Base
+from app.db.base import Base
 
 class Universe(Base):
     __tablename__ = "universes"
