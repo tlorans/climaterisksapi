@@ -1,24 +1,30 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas.universe import UniverseCreate, Universe
-from app.crud import universe
-from app.dependencies import get_db
 from typing import List
+from datetime import date
+from app.schemas.universe import UniverseCreate, Universe
+from app.crud.universe import UniverseCRUD
+from app.dependencies import get_db
 
 router = APIRouter()
 
 @router.post("/universes/", response_model=Universe)
 def create_universe(universe: UniverseCreate, db: Session = Depends(get_db)):
-    return universe.create_universe(db=db, universe=universe)
+    return UniverseCRUD.create_universe(db=db, universe=universe)
 
-@router.get("/universes/{universe_id}", response_model=Universe)
-def read_universe(universe_id: int, db: Session = Depends(get_db)):
-    db_universe = universe.get_universe(db, universe_id=universe_id)
+@router.get("/universes/{name}/{month}", response_model=Universe)
+def read_universe(name: str, month: date, db: Session = Depends(get_db)):
+    db_universe = UniverseCRUD.get_universe(db, name=name, month=month)
     if db_universe is None:
         raise HTTPException(status_code=404, detail="Universe not found")
     return db_universe
 
 @router.get("/universes/", response_model=List[Universe])
-def read_universes(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    universes = universe.get_universes(db, skip=skip, limit=limit)
+def read_universes(month: date, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    universes = UniverseCRUD.get_universes(db, month=month, skip=skip, limit=limit)
     return universes
+
+@router.get("/universes/dates/{name}", response_model=List[date])
+def read_universe_dates(name: str, db: Session = Depends(get_db)):
+    universe_dates = UniverseCRUD.get_universe_dates(db, name=name)
+    return [record[0] for record in universe_dates]

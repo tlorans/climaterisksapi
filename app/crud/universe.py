@@ -35,12 +35,17 @@ class UniverseCRUD:
         return db_universe
 
     @staticmethod
-    def get_universe(db: Session, universe_id: int):
-        return db.query(Universe).filter(Universe.id == universe_id).first()
+    def get_universe(db: Session, name: str, month: date):
+        return db.query(Universe).filter(Universe.name == name, Universe.month == month).first()
 
     @staticmethod
-    def get_universes(db: Session, skip: int = 0, limit: int = 10):
-        return db.query(Universe).offset(skip).limit(limit).all()
+    def get_universes(db: Session, month: date, skip: int = 0, limit: int = 10):
+        return db.query(Universe).filter(Universe.month == month).offset(skip).limit(limit).all()
+
+    @staticmethod
+    def get_universe_dates(db: Session, name: str):
+        return db.query(Universe.month).filter(Universe.name == name).distinct().all()
+
     @staticmethod
     def create_random_universe_for_month(db: Session, month: date):
         stocks = UniverseCRUD.stock_assignment
