@@ -33,10 +33,10 @@ end_date = datetime(2023, 1, 1)
 
 
 def erase_and_create_tables():
-    # # Drop the tables if they exist
-    # Base.metadata.drop_all(bind=engine, tables=[Fund.__table__, Holding.__table__, FundReturn.__table__])
-    # # Create the tables
-    # Base.metadata.create_all(bind=engine, tables=[Fund.__table__, Holding.__table__, FundReturn.__table__])
+    # Drop the tables if they exist
+    Base.metadata.drop_all(bind=engine, tables=[Fund.__table__, Holding.__table__, FundReturn.__table__])
+    # Create the tables
+    Base.metadata.create_all(bind=engine, tables=[Fund.__table__, Holding.__table__, FundReturn.__table__])
     Base.metadata.drop_all(bind=engine, tables=[ClimateFund.__table__, ClimateHolding.__table__, ClimateFundReturn.__table__])
     # Create the tables
     Base.metadata.create_all(bind=engine, tables=[ClimateFund.__table__, ClimateHolding.__table__, ClimateFundReturn.__table__])
@@ -45,7 +45,7 @@ def erase_and_create_tables():
 erase_and_create_tables()
 
 # Populate the database with funds, their holdings, and historical prices
-# FundCRUD.populate_funds(db, term, country, page_size, currency, start_date, end_date)
+FundCRUD.populate_funds(db, term, country, page_size, currency, start_date, end_date)
 print("Database populated with funds, their holdings, and historical prices.")
 climate_fund_share_class_ids = [
     "FOUSA00EQ9", "FOUSA00EOF", "FOUSA00JXN", "FOUSA02W00", "F000010I8X"
