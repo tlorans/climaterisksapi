@@ -1,11 +1,11 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import List
+from typing import List, Optional
 
 class HoldingBase(BaseModel):
     security_name: str
     weighting: float
-    sus_esg_risk_score: float
+    sus_esg_risk_score: Optional[float]
 
 class HoldingCreate(HoldingBase):
     fund_id: int
@@ -19,7 +19,7 @@ class Holding(HoldingBase):
 
 class FundReturnBase(BaseModel):
     date: date
-    total_return: float
+    total_return: Optional[float]
 
 class FundReturnCreate(FundReturnBase):
     fund_id: int
@@ -32,6 +32,7 @@ class FundReturn(FundReturnBase):
         orm_mode: True
 
 class FundBase(BaseModel):
+    id: int  # Include id in the FundBase schema
     name: str
     fund_share_class_id: str
 

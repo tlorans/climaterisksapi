@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.crud.funds import FundCRUD
 from app.db.session import get_db
-from app.schemas.funds import FundBase, HoldingBase, FundReturn
+from app.schemas.funds import FundBase, HoldingBase, FundReturnBase
 
 router = APIRouter()
 
@@ -21,7 +21,7 @@ def get_fund_holdings(fund_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Holdings not found for this fund")
     return holdings
 
-@router.get("/funds/{fund_id}/true_returns", response_model=List[FundReturn])
+@router.get("/funds/{fund_id}/total_returns", response_model=List[FundReturnBase])
 def get_fund_true_returns(fund_id: int, db: Session = Depends(get_db)):
     true_returns = FundCRUD.get_fund_true_returns(db, fund_id)
     if not true_returns:

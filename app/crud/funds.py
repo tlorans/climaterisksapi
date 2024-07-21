@@ -21,23 +21,24 @@ class FundCRUD:
     @staticmethod
     def get_fund_true_returns(db: Session, fund_id: int):
         returns = db.query(FundReturn).filter(FundReturn.fund_id == fund_id).order_by(FundReturn.date).all()
-        if not returns:
-            return []
+        return returns
+        # if not returns:
+        #     return []
         
-        # Compute the first differences (true returns)
-        true_returns = []
-        previous_return = None
-        for ret in returns:
-            if previous_return is not None:
-                true_return = FundReturn(
-                    fund_id=ret.fund_id,
-                    date=ret.date,
-                    total_return=ret.total_return - previous_return.total_return
-                )
-                true_returns.append(true_return)
-            previous_return = ret
+        # # Compute the first differences (true returns)
+        # true_returns = []
+        # previous_return = None
+        # for ret in returns:
+        #     if previous_return is not None:
+        #         true_return = FundReturn(
+        #             fund_id=ret.fund_id,
+        #             date=ret.date,
+        #             total_return=ret.total_return - previous_return.total_return
+        #         )
+        #         true_returns.append(true_return)
+        #     previous_return = ret
 
-        return true_returns
+        # return true_returns
 
     @staticmethod
     def create_fund(db: Session, fund: FundCreate):

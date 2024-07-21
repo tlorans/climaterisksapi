@@ -2,5 +2,5 @@
 from app.crud.funds import FundCRUD
 from app.db.session import get_db
 
-test = FundCRUD.get_all_fund_names(next(get_db()))
-print([name for (name,) in test])   
+test = FundCRUD.get_fund_holdings(next(get_db()), 1)
+print(test)
