@@ -26,6 +26,7 @@ class ClimateSignalCRUD:
         query = db.query(ClimateNews.date, ClimateNews.value).filter(ClimateNews.name == name).all()
         df = pd.DataFrame(query, columns=['date', 'value'])
         df['date'] = pd.to_datetime(df['date'])
+        df.sort_values(by='date', inplace=True)
         df.set_index('date', inplace=True)
 
         # Compute the first differences (returns) for the climate news series
@@ -68,10 +69,10 @@ class ClimateSignalCRUD:
         # Find the common dates across all dataframes
         common_dates = fund_returns['date'].unique()
         common_dates = pd.to_datetime(common_dates)
+        print(common_dates)
         climate_news = climate_news[climate_news.index.isin(common_dates)]
         fund_returns = fund_returns[fund_returns['date'].isin(common_dates)]
 
-        all_signals = []
         df_results = pd.DataFrame()
         for fund_id in fund_returns['fund_id'].unique():
             fund_data = fund_returns[fund_returns['fund_id'] == fund_id].set_index('date')
@@ -103,7 +104,12 @@ class ClimateSignalCRUD:
             betas['fund_id'] = fund_id
             df_results = pd.concat([df_results, betas])
         
+
+        # Normalize the positive betas to get the weights
         df_results['weight'] = df_results.groupby('date')['positive_beta'].transform(lambda x: x / x.sum())
+        df_results.fillna(0, inplace=True)
+
+        all_signals = []
 
         for date, row in df_results.iterrows():
             signal = ClimateSignalCreate(
