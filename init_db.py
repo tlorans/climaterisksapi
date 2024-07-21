@@ -11,6 +11,9 @@ from app.schemas.universe import UniverseCreate, StockCreate
 from app.crud.universe import UniverseCRUD
 from app.db.base import Base
 
+from app.models.returns import StockReturn
+from app.crud.returns import StockReturnCRUD
+
 # Database URL
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -33,9 +36,21 @@ db = next(get_db())
 
 # erase previous table if it exists
 # Drop the Universe and Stock tables if they exist
-Base.metadata.drop_all(bind=engine, tables=[Universe.__table__, Stock.__table__])
+Base.metadata.drop_all(bind=engine, tables=[Universe.__tablename__, Stock.__tablename__])
+print(f"Tables dropped: {Universe.__tablename__, Stock.__tablename__}")
 # Create the Universe and Stock tables
-Base.metadata.create_all(bind=engine, tables=[Universe.__table__, Stock.__table__])
-
+Base.metadata.create_all(bind=engine, tables=[Universe.__tablename__, Stock.__tablename__])
+print(f"Tables created: {Universe.__tablename__, Stock.__tablename__}")
 
 UniverseCRUD.create_random_universes(db)
+
+# erase previous table if it exists
+# Drop the Universe and Stock tables if they exist
+Base.metadata.drop_all(bind=engine, tables=[StockReturn.__tablename__])
+print(f"Tables dropped: {StockReturn.__tablename__}")
+# Create the Universe and Stock tables
+Base.metadata.create_all(bind=engine, tables=[StockReturn.__tablename__])
+print(f"Tables created: {StockReturn.__tablename__}")
+
+
+StockReturnCRUD.populate_stock_returns(db)

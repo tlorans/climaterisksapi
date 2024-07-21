@@ -9,6 +9,8 @@ class Universe(Base):
     name = Column(String, index=True)
     month = Column(Date, index=True)
     stocks = relationship("Stock", back_populates="universe")
+    stock_returns = relationship("StockReturn", back_populates="universe")
+
 
 class Stock(Base):
     __tablename__ = "stocks"

@@ -4,6 +4,7 @@ from app.schemas.universe import UniverseCreate
 from datetime import date
 import random
 import pandas as pd
+from tqdm import tqdm
 
 class UniverseCRUD:
     zones = ["Zone A", "Zone B", "Zone C", "Zone D"]
@@ -94,5 +95,5 @@ class UniverseCRUD:
 
     @staticmethod
     def create_random_universes(db: Session):
-        for month in UniverseCRUD.date_range:
+        for month in tqdm(UniverseCRUD.date_range, desc="Creating random universes"):
             UniverseCRUD.create_random_universe_for_month(db, month)
