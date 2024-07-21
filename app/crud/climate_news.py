@@ -38,3 +38,16 @@ class ClimateNewsCRUD:
 
         # Bulk insert all climate news
         ClimateNewsCRUD.create_climate_news_bulk(db, all_news)
+
+    @staticmethod
+    def get_climate_news_series_names(db: Session):
+        query = db.query(ClimateNews.name).distinct().all()
+        series_names = [row[0] for row in query]
+        return series_names
+
+    @staticmethod
+    def get_climate_news_series_by_name(db: Session, name: str):
+        query = db.query(ClimateNews.date, ClimateNews.value).filter(ClimateNews.name == name).all()
+        df = pd.DataFrame(query, columns=['date', 'value'])
+        df['date'] = pd.to_datetime(df['date'])
+        return df.set_index('date')

@@ -11,6 +11,7 @@ class ClimateFund(Base):
 
     holdings = relationship("ClimateHolding", back_populates="fund")
     returns = relationship("ClimateFundReturn", back_populates="fund")
+    climate_signals = relationship("ClimateSignal", back_populates="fund")
 
 class ClimateHolding(Base):
     __tablename__ = "climate_holdings"
