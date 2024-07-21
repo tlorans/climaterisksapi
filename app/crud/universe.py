@@ -43,8 +43,8 @@ class UniverseCRUD:
         return db.query(Universe).filter(Universe.month == month).offset(skip).limit(limit).all()
 
     @staticmethod
-    def get_universe_dates(db: Session, name: str):
-        return db.query(Universe.month).filter(Universe.name == name).distinct().all()
+    def get_dates(db: Session):
+        return db.query(Universe.month).distinct().all()
 
     @staticmethod
     def create_random_universe_for_month(db: Session, month: date):

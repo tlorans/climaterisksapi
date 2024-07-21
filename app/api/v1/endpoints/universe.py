@@ -24,7 +24,9 @@ def read_universes(month: date, skip: int = 0, limit: int = 10, db: Session = De
     universes = UniverseCRUD.get_universes(db, month=month, skip=skip, limit=limit)
     return universes
 
-@router.get("/universes/dates/{name}", response_model=List[date])
-def read_universe_dates(name: str, db: Session = Depends(get_db)):
-    universe_dates = UniverseCRUD.get_universe_dates(db, name=name)
+@router.get("/universes/dates/", response_model=List[date])
+def read_universe_dates(db: Session = Depends(get_db)):
+    universe_dates = UniverseCRUD.get_dates(db)
+    if not universe_dates:
+        raise HTTPException(status_code=404, detail="No dates found")
     return [record[0] for record in universe_dates]

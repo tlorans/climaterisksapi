@@ -29,3 +29,4 @@ class Universe(UniverseBase):
 
     class Config:
         orm_mode: True
+
