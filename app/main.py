@@ -1,12 +1,12 @@
 from fastapi import FastAPI
-from app.api.v1.endpoints import universe
-from app.db import base
+from app.api.v1.endpoints import funds
+from app.db.base import Base
 from app.db.session import engine
 
 # Create all tables
-base.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 # Include routers
-app.include_router(universe.router, prefix="/api/v1", tags=["universes"])
+app.include_router(funds.router, prefix="/api/v1")

@@ -7,6 +7,39 @@ from tqdm import tqdm
 
 class FundCRUD:
     @staticmethod
+    def get_all_fund_names(db: Session):
+        return db.query(Fund.name).all()
+    
+    @staticmethod
+    def get_fund_by_name(db: Session, name: str):
+        return db.query(Fund).filter(Fund.name == name).first()
+
+    @staticmethod
+    def get_fund_holdings(db: Session, fund_id: int):
+        return db.query(Holding).filter(Holding.fund_id == fund_id).all()
+
+    @staticmethod
+    def get_fund_true_returns(db: Session, fund_id: int):
+        returns = db.query(FundReturn).filter(FundReturn.fund_id == fund_id).order_by(FundReturn.date).all()
+        if not returns:
+            return []
+        
+        # Compute the first differences (true returns)
+        true_returns = []
+        previous_return = None
+        for ret in returns:
+            if previous_return is not None:
+                true_return = FundReturn(
+                    fund_id=ret.fund_id,
+                    date=ret.date,
+                    total_return=ret.total_return - previous_return.total_return
+                )
+                true_returns.append(true_return)
+            previous_return = ret
+
+        return true_returns
+
+    @staticmethod
     def create_fund(db: Session, fund: FundCreate):
         db_fund = Fund(name=fund.name, fund_share_class_id=fund.fund_share_class_id)
         db.add(db_fund)
